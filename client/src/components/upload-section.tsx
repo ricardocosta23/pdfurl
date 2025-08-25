@@ -25,7 +25,7 @@ export default function UploadSection() {
       
       const uniqueFilename = `${file.name.replace('.pdf', '')}-${Date.now()}-${Math.round(Math.random() * 1E9)}.pdf`;
       
-      const response = await fetch('/api/test-upload', {
+      const response = await fetch('/api/upload', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ export default function UploadSection() {
           filename: uniqueFilename,
           originalName: file.name,
           size: file.size,
-          fileData: fileData.substring(0, 100) + '...[truncated]',
+          fileData: fileData,
         }),
       });
       
