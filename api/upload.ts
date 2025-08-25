@@ -15,30 +15,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    // Handle different content types
-    let data;
-    const contentType = req.headers['content-type'] || '';
-    
-    if (contentType.includes('application/json')) {
-      data = req.body;
-    } else if (contentType.includes('multipart/form-data')) {
-      // If it's multipart, req.body might be parsed differently
-      data = req.body;
-    } else {
-      return res.status(400).json({ 
-        message: "Unsupported content type",
-        contentType: contentType
-      });
-    }
-    
-    const { filename, originalName, size, fileData } = data || {};
+    // Get request data (Vercel automatically parses JSON)
+    const { filename, originalName, size, fileData } = req.body || {};
     
     if (!filename || !originalName || !size) {
       return res.status(400).json({ 
         message: "Missing required fields",
-        received: { filename, originalName, size: !!size, fileData: !!fileData },
-        contentType: contentType,
-        bodyKeys: data ? Object.keys(data) : []
+        received: { filename, originalName, size: !!size, fileData: !!fileData }
       });
     }
 
