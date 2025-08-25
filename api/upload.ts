@@ -24,8 +24,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
+    // Parse JSON body if it's a string
+    let body = req.body;
+    if (typeof body === 'string') {
+      body = JSON.parse(body);
+    }
+    
+    if (!body) {
+      return res.status(400).json({ message: "Request body is required" });
+    }
+
     // Validate request body
-    const validatedData = uploadSchema.parse(req.body);
+    const validatedData = uploadSchema.parse(body);
     
     // Get the domain for public URL
     const domain = req.headers.host || 'localhost:3000';
