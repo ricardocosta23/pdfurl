@@ -16,12 +16,26 @@ export default function UploadSection() {
 
   const uploadMutation = useMutation({
     mutationFn: async (file: File) => {
-      const formData = new FormData();
-      formData.append('pdf', file);
+      // Convert file to base64 for Vercel serverless functions
+      const fileData = await new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.readAsDataURL(file);
+      });
       
-      const response = await fetch('/api/upload', {
+      const uniqueFilename = `${file.name.replace('.pdf', '')}-${Date.now()}-${Math.round(Math.random() * 1E9)}.pdf`;
+      
+      const response = await fetch('/api/test-upload', {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          filename: uniqueFilename,
+          originalName: file.name,
+          size: file.size,
+          fileData: fileData.substring(0, 100) + '...[truncated]',
+        }),
       });
       
       if (!response.ok) {
