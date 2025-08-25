@@ -1,11 +1,5 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
-  "outputDirectory": "client/dist",
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/client/dist/$1"
-    }
-  ]
+  "buildCommand": "vite build",
+  "outputDirectory": "dist/public"
 }
