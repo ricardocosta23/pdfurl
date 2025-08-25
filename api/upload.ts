@@ -5,7 +5,7 @@ import { z } from 'zod';
 const uploadSchema = z.object({
   filename: z.string(),
   originalName: z.string(), 
-  size: z.number(),
+  size: z.union([z.number(), z.string().transform(Number)]),
   fileData: z.string(),
 });
 
