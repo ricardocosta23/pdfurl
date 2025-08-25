@@ -1,5 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
+// Simple in-memory storage for demo purposes (shared with files.ts)
+let fileStorage: any[] = [];
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -39,6 +42,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       publicUrl,
       uploadDate: new Date().toISOString(),
     };
+    
+    // Add to storage
+    fileStorage.push(fileRecord);
     
     return res.json(fileRecord);
   } catch (error) {
