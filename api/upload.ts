@@ -24,14 +24,31 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
+    // Debug logging
+    console.log('Request method:', req.method);
+    console.log('Request headers:', req.headers);
+    console.log('Request body type:', typeof req.body);
+    console.log('Request body:', req.body);
+    
     // Parse JSON body if it's a string
     let body = req.body;
     if (typeof body === 'string') {
-      body = JSON.parse(body);
+      try {
+        body = JSON.parse(body);
+      } catch (e) {
+        return res.status(400).json({ message: "Invalid JSON in request body" });
+      }
     }
     
-    if (!body) {
-      return res.status(400).json({ message: "Request body is required" });
+    if (!body || Object.keys(body).length === 0) {
+      return res.status(400).json({ 
+        message: "Request body is required",
+        debug: {
+          bodyType: typeof req.body,
+          bodyContent: req.body,
+          contentType: req.headers['content-type']
+        }
+      });
     }
 
     // Validate request body
